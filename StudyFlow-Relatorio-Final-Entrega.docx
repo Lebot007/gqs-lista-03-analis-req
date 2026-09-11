@@ -1,0 +1,97 @@
+# Ânima Educação
+
+# STUDYFLOW
+
+## Documento de Especificação de Requisitos e Qualidade
+
+**Gestão e Qualidade de Software - A3 Prático**
+
+**ODS 4 - Educação de Qualidade**
+
+## Integrantes
+
+- João Vitor Alves Rodrigues - RA 32513480
+- Rafael Luiz Ferreira de Souza - RA 32511503
+- Pietro Cardoso de Oliveira - RA 32515280
+- Gustavo Henrique Ramos Gomes - RA 325141430
+- Pedro Henrique Martins - RA 325130235
+
+# Sumário
+
+1. Visão geral do sistema
+2. Matriz de requisitos
+3. Modelagem de dados
+4. Arquitetura e diagrama de classes
+5. Versionamento e qualidade
+6. Plano de garantia da qualidade
+7. Fluxo crítico e conclusão
+
+# 1. Visão geral do sistema
+
+## Problema
+
+Estudantes concentram tarefas, leituras, avaliações e entregas em canais diferentes. A falta de uma visão única de prioridades e prazos aumenta atrasos, retrabalho e desorganização.
+
+## Solução e público-alvo
+
+O StudyFlow centraliza atividades acadêmicas em um dashboard. Cada tarefa possui título, disciplina, prazo, prioridade e status, acompanhados por indicadores de progresso. O público-alvo são estudantes de graduação.
+
+## ODS relacionada
+
+A ODS 4 é atendida pelo apoio à autonomia, organização e continuidade do aprendizado.
+
+# 2. Matriz de requisitos
+
+| ID | Tipo | Descrição | Prioridade | Critério de aceite |
+|---|---|---|---|---|
+| RF-01 | RF | Cadastrar tarefa com título, disciplina, prazo e prioridade. | Alta | A tarefa aparece como pendente. |
+| RF-02 | RF | Listar tarefas por pendência e prazo. | Alta | Pendentes aparecem antes das concluídas. |
+| RF-03 | RF | Concluir ou reabrir tarefa. | Alta | Status e contagem são atualizados. |
+| RF-04 | RF | Filtrar todas, pendentes e concluídas. | Média | O filtro exibe itens correspondentes. |
+| RF-05 | RF | Exibir indicadores semanais. | Média | Dashboard mostra pendências e progresso. |
+| RF-06 | RF | Persistir tarefas por API Python. | Alta | Dados permanecem após reiniciar a API. |
+| RNF-01 | RNF | Interface responsiva. | Alta | Funciona em 360px, 768px e desktop. |
+| RNF-02 | RNF | Desempenho. | Média | Carregamento local em até 2 segundos. |
+| RNF-03 | RNF | Segurança de entrada. | Alta | API rejeita dados inválidos. |
+| RNF-04 | RNF | Manutenibilidade. | Média | Há factory, banco isolado e testes. |
+| RNF-05 | RNF | CI. | Baixa | PR executa testes e build automaticamente. |
+
+# 3. Modelagem de dados
+
+A entidade Task possui id, title, subject, due_date, priority, status e created_at. O desenvolvimento usa SQLite local; a integração usa MySQL por STUDYFLOW_DATABASE_URL. O schema está em backend/schema.mysql.sql.
+
+# 4. Arquitetura e diagrama de classes
+
+```text
+TaskAPI -> TaskRepository -> Task
+
+Task: id, title, subject, due_date, priority, status, created_at
+Task: complete(), reopen()
+
+TaskRepository: list(status), create(data), update_status(id, status), delete(id)
+TaskAPI: GET, POST, PATCH e DELETE /api/tasks
+```
+
+A interface React + Vite consome a Flask REST API por JSON/HTTP. A API usa SQLite ou MySQL conforme a configuração.
+
+# 5. Versionamento e qualidade
+
+- main: versão estável.
+- develop: integração do time.
+- feature/nome-curto: desenvolvimento de funcionalidades.
+- Commits semânticos: feat, fix, test, docs, refactor e chore.
+- Pull Requests exigem CI verde e revisão.
+- CI executa pytest e build do frontend.
+
+# 6. Plano de garantia da qualidade
+
+- **QA-01 Cadastro:** dados válidos geram tarefa pendente.
+- **QA-02 Conclusão:** controle circular atualiza status, texto e contagem.
+- **QA-03 API inválida:** POST sem título retorna HTTP 400.
+- **QA-04 Responsividade:** 360px, 768px e 1440px não apresentam sobreposição.
+
+# 7. Fluxo crítico e conclusão
+
+Abrir dashboard, conferir prioridades, criar tarefa, salvar no banco, executar atividade e marcar como concluída.
+
+O código está funcional, testado e documentado. O banco inicia vazio por padrão. A conexão MySQL está preparada. GitHub, vídeo pitch e WayHub são entregas externas posteriores.
