@@ -1,441 +1,142 @@
 <div align="center">
 
-# 🅿️ ParkSim
-### Sistema Simulador de Estacionamento Inteligente
+# StudyFlow
 
-Projeto acadêmico da disciplina **Gestão e Qualidade de Software** — UNA Barreiro
-**Professor:** Daniel Henrique Matos de Paiva
+### Documento de Especificação de Requisitos e Qualidade
 
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES%20Modules-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
-[![Tests](https://img.shields.io/badge/tests-28%20passed-2ECC71?style=flat-square&logo=pytest&logoColor=white)](#-testes-automatizados)
-[![License](https://img.shields.io/badge/license-academic-lightgrey?style=flat-square)](#)
+**Gestão e Qualidade de Software · A3 Prático**
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/API-Flask-000000?logo=flask&logoColor=white)
+![ODS 4](https://img.shields.io/badge/ODS%204-Educação%20de%20Qualidade-0A97D9)
+
+**Status:** MVP funcional · documentação em revisão final
 
 </div>
 
-<br>
+> [!NOTE]
+> Este documento apresenta o problema, os requisitos, os critérios de aceite, a estratégia de persistência e o plano de garantia da qualidade do StudyFlow.
 
-## 📑 Sumário
+## Sumário
 
-- [Sobre o projeto](#-sobre-o-projeto)
-- [Arquitetura](#️-arquitetura)
-- [Tecnologias utilizadas](#-tecnologias-utilizadas)
-- [Estrutura do projeto](#-estrutura-do-projeto)
-- [Responsabilidades dos arquivos](#-responsabilidades-dos-arquivos)
-- [Funcionalidades principais](#-funcionalidades-principais)
-- [API disponível](#-api-disponível)
-- [Banco de dados](#-banco-de-dados)
-- [Como executar](#️-como-executar)
-- [Testes automatizados](#-testes-automatizados)
-- [Qualidade de software](#-qualidade-de-software)
-- [Integração contínua](#-integração-contínua)
-- [Documentação complementar](#-documentação-complementar)
-- [Status do projeto](#-status-do-projeto)
-- [Equipe](#-equipe)
+- [1. Visão geral](#1-visão-geral)
+- [2. Integrantes](#2-integrantes)
+- [3. Matriz de requisitos](#3-matriz-de-requisitos)
+- [4. Persistência e implantação](#4-persistência-e-implantação)
+- [5. Fluxo crítico](#5-fluxo-crítico)
+- [6. Cenários de QA](#6-cenários-de-qa)
 
-<br>
+## 1. Visão geral
 
-## 👥 Equipe
+### Problema
+
+Estudantes concentram tarefas, leituras e avaliações em canais diferentes e perdem visibilidade sobre prioridades e prazos. Isso aumenta atrasos, retrabalho e a sensação de desorganização.
+
+### Solução
+
+O **StudyFlow** centraliza atividades acadêmicas em uma visão de rotina. Cada tarefa possui disciplina, prazo, prioridade e status, acompanhados por indicadores simples de progresso.
+
+### Público-alvo
+
+Estudantes de graduação que precisam acompanhar várias disciplinas e entregas semanais.
+
+### ODS relacionada
+
+**ODS 4 - Educação de Qualidade.** A aplicação apoia autonomia, organização e continuidade do processo de aprendizagem.
+
+## 2. Integrantes
 
 | Integrante | RA |
-|---|---|
-| João Vitor | 32513480 |
+|---|---:|
+| João Vitor Alves Rodrigues | 32513480 |
 | Rafael Luiz Ferreira de Souza | 32511503 |
 | Pietro Cardoso de Oliveira | 32515280 |
+| Gustavo Henrique Ramos Gomes | 325141430 |
+| Pedro Henrique Martins | 325130235 |
 
-<br>
+## 3. Matriz de requisitos
 
-## 📖 Sobre o projeto
+### Requisitos funcionais
 
-O **ParkSim** é uma aplicação web que simula o fluxo de veículos em um estacionamento inteligente com **8 vagas**.
+| ID | Descrição | Prioridade | Critério de aceite |
+|---|---|:---:|---|
+| **RF-01** | Cadastrar tarefa com título, disciplina, prazo e prioridade. | Alta | Ao enviar o formulário, a nova tarefa aparece como pendente. |
+| **RF-02** | Listar tarefas ordenadas por pendência e prazo. | Alta | Tarefas pendentes aparecem antes das concluídas. |
+| **RF-03** | Concluir ou reabrir uma tarefa. | Alta | O controle visual altera o status e atualiza a contagem. |
+| **RF-04** | Filtrar tarefas por todas, pendentes e concluídas. | Média | Cada filtro mostra somente os itens correspondentes. |
+| **RF-05** | Exibir indicadores semanais de estudo. | Média | O dashboard mostra pendências, concluídas e horas de foco. |
+| **RF-06** | Persistir tarefas em API Python e banco configurável. | Alta | A API mantém os dados após reinicialização do processo. |
 
-O sistema representa:
+### Requisitos não funcionais
 
-- 🚗 entrada de veículos
-- 🅿️ escolha de vaga
-- ⏱️ permanência
-- 🚪 saída
-- 📊 ocupação das vagas
-- 🗂️ registro das movimentações
-- 🔐 painel administrativo
-- 📈 estatísticas da sessão
-- 📄 exportação de relatório em PDF
+| ID | Atributo | Prioridade | Critério de aceite |
+|---|---|:---:|---|
+| **RNF-01** | Usabilidade responsiva | Alta | O fluxo funciona em 360px, 768px e desktop sem rolagem horizontal. |
+| **RNF-02** | Desempenho | Média | O dashboard local carrega em até 2 segundos em conexão comum. |
+| **RNF-03** | Segurança de entrada | Alta | A API rejeita título vazio e prioridades fora da lista permitida. |
+| **RNF-04** | Manutenibilidade | Média | O backend possui factory, banco isolado e testes automatizados. |
+| **RNF-05** | Disponibilidade de desenvolvimento | Baixa | A CI executa testes Python e build frontend em cada PR para `main`. |
 
-O projeto busca resolver um problema real: **a falta de visibilidade sobre o fluxo de entrada, ocupação e saída de veículos em estacionamentos.**
+## 4. Persistência e implantação
 
-> 🌍 A solução está relacionada à **ODS 11 — Cidades e Comunidades Sustentáveis**, por abordar organização, monitoramento e gestão de espaços urbanos.
+O backend inicia com banco vazio por padrão, sem dados fictícios para o usuário final.
 
-<br>
-
-## 🏗️ Arquitetura
-
-O projeto utiliza uma arquitetura em três camadas:
-
-```text
-Frontend JavaScript
-        ↓
-API Python/FastAPI
-        ↓
-Supabase/PostgreSQL
-```
-
-> ⚠️ O frontend **não** acessa diretamente o Supabase. Todas as operações de dados passam pelo backend Python.
-
-<br>
-
-## 🧰 Tecnologias utilizadas
-
-<table>
-<tr>
-<td valign="top" width="33%">
-
-**Frontend**
-- HTML5
-- CSS3
-- JavaScript ES Modules
-- Web Animations API
-- `requestAnimationFrame`
-- jsPDF
-- jsPDF AutoTable
-- Live Server
-
-</td>
-<td valign="top" width="33%">
-
-**Backend**
-- Python 3.12
-- FastAPI
-- Uvicorn
-- Pydantic
-- python-dotenv
-- Supabase Python Client
-- pytest
-- HTTPX
-
-</td>
-<td valign="top" width="33%">
-
-**Banco de dados**
-- PostgreSQL
-- Supabase
-- Tabela `movimentacoes`
-- Trigger para cálculo do tempo de permanência
-- Autenticação administrativa
-
-</td>
-</tr>
-</table>
-
-<br>
-
-## 📁 Estrutura do projeto
-
-<details>
-<summary><strong>Clique para expandir a árvore de diretórios</strong></summary>
-
-```text
-projeto/
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── backend/
-│   ├── .env.example
-│   ├── requirements.txt
-│   │
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   ├── main.py
-│   │   ├── regras.py
-│   │   ├── repositorio.py
-│   │   └── schemas.py
-│   │
-│   └── tests/
-│       ├── __init__.py
-│       ├── test_api.py
-│       └── test_regras.py
-│
-├── js/
-│   ├── app.js
-│   ├── banco.js
-│   ├── config.js
-│   ├── simulacao.js
-│   └── ui.js
-│
-├── index.html
-├── style.css
-├── README.md
-├── estrutura.txt
-├── especificacao_tecnica_parksim_revisada.pdf
-└── ParkSim_Apresentacao_revisada.pptx
-```
-
-</details>
-
-<br>
-
-## 🧩 Responsabilidades dos arquivos
-
-**Frontend**
-
-| Arquivo | Responsabilidade |
-|---|---|
-| `index.html` | Estrutura da interface |
-| `style.css` | Tema visual, responsividade e animações |
-| `js/app.js` | Orquestração dos eventos, autenticação e simulação |
-| `js/banco.js` | Comunicação com a API Python usando `fetch` |
-| `js/config.js` | Constantes da simulação e URL da API |
-| `js/simulacao.js` | Motor da simulação, vagas, placas, entradas e saídas |
-| `js/ui.js` | Atualização do DOM, tabela, métricas, animações e exportação PDF |
-
-**Backend**
-
-| Arquivo | Responsabilidade |
-|---|---|
-| `backend/app/main.py` | Aplicação FastAPI, endpoints e tratamento de erros |
-| `backend/app/regras.py` | Regras de negócio e validações |
-| `backend/app/repositorio.py` | Conexão e operações no Supabase/PostgreSQL |
-| `backend/app/schemas.py` | Modelos de entrada usando Pydantic |
-| `backend/app/config.py` | Leitura das variáveis de ambiente |
-| `backend/tests/` | Testes unitários e testes da API |
-
-<br>
-
-## ⚙️ Funcionalidades principais
-
-- ✅ Simulação de estacionamento com 8 vagas
-- ✅ Geração de placas no padrão Mercosul
-- ✅ Escolha aleatória de cores
-- ✅ Entrada e saída de veículos
-- ✅ Controles de iniciar, pausar e reiniciar
-- ✅ Velocidades de simulação 1x, 2x e 3x
-- ✅ Registro persistente das movimentações
-- ✅ Login administrativo
-- ✅ Painel protegido para consulta do relatório
-- ✅ Métricas de veículos, estacionados, saídas e tempo médio
-- ✅ Tabela com as movimentações recentes
-- ✅ Exportação do relatório em PDF
-- ✅ Tratamento de erros de conexão, validação e autenticação
-
-<br>
-
-## 🔌 API disponível
-
-| Método | Rota | Finalidade |
+| Ambiente | Configuração | Finalidade |
 |---|---|---|
-| `GET` | `/health` | Verificar se a API está funcionando |
-| `POST` | `/auth/login` | Realizar login administrativo |
-| `GET` | `/movimentacoes` | Consultar movimentações |
-| `GET` | `/relatorio/resumo` | Consultar resumo da sessão |
-| `POST` | `/movimentacoes` | Registrar entrada |
-| `PATCH` | `/movimentacoes/saida` | Registrar saída |
-| `DELETE` | `/movimentacoes` | Limpar movimentações |
+| Desenvolvimento | SQLite local | Executar e testar sem infraestrutura externa. |
+| Produção ou integração | MySQL via `STUDYFLOW_DATABASE_URL` | Persistência compartilhada da aplicação. |
+| Demonstração | `STUDYFLOW_SEED_DEMO=true` | Popular dados somente quando necessário. |
 
-<br>
+O esquema da tabela `tasks` está disponível em [`backend/schema.mysql.sql`](../backend/schema.mysql.sql). A API mantém as mesmas rotas para o frontend independentemente do banco utilizado.
 
-## 🗄️ Banco de dados
+## 5. Fluxo crítico
 
-A tabela principal utilizada pelo sistema é `movimentacoes`.
-
-**Campos principais:**
-
-`id` · `sessao` · `placa` · `cor` · `vaga` · `hora_entrada` · `hora_saida` · `tempo_minutos` · `status`
-
-O Supabase utiliza PostgreSQL em nuvem. O backend Python acessa o banco por meio da biblioteca `supabase`.
-
-A saída de um veículo atualiza `hora_saida` e `status`. O cálculo de `tempo_minutos` é realizado pela regra configurada no banco por meio de trigger.
-
-> 🔒 As credenciais secretas devem permanecer somente no arquivo local `backend/.env`. Esse arquivo **não** deve ser enviado ao GitHub.
-
-<br>
-
-## ▶️ Como executar
-
-### 1. Criar o ambiente virtual
-
-No Windows:
-
-```powershell
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
+```mermaid
+flowchart LR
+	A[ abrir dashboard ] --> B[ conferir prioridades ]
+	B --> C[ criar tarefa ]
+	C --> D[ salvar no banco ]
+	D --> E[ executar atividade ]
+	E --> F[ marcar como concluída ]
 ```
 
-### 2. Instalar as dependências
+1. O estudante abre o dashboard.
+2. Confere pendências e prioridades.
+3. Seleciona **Nova tarefa**.
+4. Informa atividade, disciplina, prazo e prioridade.
+5. Salva e visualiza a tarefa na lista.
+6. Marca a atividade como concluída.
 
-```powershell
-pip install -r requirements.txt
-```
+## 6. Cenários de QA
 
-### 3. Configurar o ambiente
+### QA-01 · Cadastro válido
 
-Crie o arquivo `backend/.env`:
+- **Entrada:** título `Revisar capítulo 4`, disciplina `GQS`, prioridade `Alta`.
+- **Passos:** abrir o modal, preencher os campos e enviar.
+- **Resultado esperado:** a tarefa aparece como pendente e a contagem é atualizada.
 
-```env
-SUPABASE_URL=https://seu-projeto.supabase.co
-SUPABASE_SERVICE_KEY=sua_chave_secreta
-```
+### QA-02 · Conclusão de tarefa
 
-> ⚠️ Nunca publique a chave secreta no GitHub ou no frontend.
+- **Entrada:** uma tarefa pendente visível.
+- **Passos:** clicar no círculo de conclusão.
+- **Resultado esperado:** a tarefa recebe marca de concluída, o texto fica riscado e ela sai do filtro de pendentes.
 
-### 4. Executar os testes
+### QA-03 · Validação de API
 
-```powershell
-python -m pytest -v
-```
+- **Entrada:** requisição `POST /api/tasks` sem título.
+- **Passos:** enviar JSON sem o campo obrigatório.
+- **Resultado esperado:** resposta HTTP `400`, sem registro incompleto.
 
-Resultado atual da suíte:
+### QA-04 · Responsividade
 
-```text
-28 passed
-```
+- **Entrada:** viewport de 360px, 768px e 1440px.
+- **Passos:** navegar pelo dashboard e abrir o formulário.
+- **Resultado esperado:** conteúdo sem sobreposição, menu acessível e formulário utilizável.
 
-### 5. Iniciar a API
+### Métricas de qualidade
 
-```powershell
-uvicorn app.main:app --reload --port 8000
-```
-
-A API ficará disponível em:
-
-```text
-http://127.0.0.1:8000
-```
-
-Para verificar:
-
-```text
-http://127.0.0.1:8000/health
-```
-
-A resposta esperada é:
-
-```json
-{
-  "status": "ok"
-}
-```
-
-### 6. Iniciar o frontend
-
-Mantenha a API rodando e abra o `index.html` usando o **Live Server** do VS Code.
-
-O frontend normalmente ficará disponível em:
-
-```text
-http://127.0.0.1:5500
-```
-
-> ℹ️ A API Python e o Live Server precisam estar rodando simultaneamente.
-
-<br>
-
-## 🧪 Testes automatizados
-
-Os testes cobrem:
-
-- validação de placas
-- validação de cores
-- validação de vagas
-- cálculo de permanência
-- tempo mínimo de permanência
-- média de tempos
-- frequência de cores e vagas
-- criação de movimentações
-- rejeição de dados inválidos
-- registro de saída
-- retorno 404 para veículo inexistente
-- autenticação sem token
-- limpeza de registros
-
-> 🧵 Os testes da API utilizam um repositório falso (`RepoFalso`) para evitar dependência de rede ou do banco real durante a execução da suíte.
-
-<br>
-
-## ✅ Qualidade de software
-
-O projeto aplica:
-
-- separação de responsabilidades
-- regras de negócio isoladas
-- tratamento de erros com `try/except`
-- respostas HTTP adequadas
-- modelos Pydantic
-- testes automatizados
-- documentação técnica
-- integração contínua configurada
-- arquitetura em camadas
-- uso de variáveis de ambiente
-- proteção das credenciais secretas
-
-<br>
-
-## 🔄 Integração contínua
-
-O arquivo `.github/workflows/ci.yml` configura um workflow para:
-
-1. utilizar Python 3.12;
-2. instalar as dependências;
-3. executar os testes com pytest.
-
-**Estratégia de versionamento planejada:**
-
-| Branch | Finalidade |
-|---|---|
-| `main` | Versão estável |
-| `develop` | Integração |
-| `feature/*` | Novas funcionalidades |
-| `fix/*` | Correções |
-| `docs/*` | Documentação |
-
-Também são recomendados **commits semânticos**, como:
-
-```text
-feat: adiciona API FastAPI
-fix: corrige registro de saída
-test: adiciona testes de validação
-docs: atualiza documentação
-ci: configura workflow de testes
-```
-
-<br>
-
-## 📚 Documentação complementar
-
-Este projeto possui:
-
-- 📄 documento de especificação técnica
-- 📊 apresentação PowerPoint
-- 📋 matriz de requisitos
-- 🧪 plano de testes
-- 🏗️ documentação da arquitetura
-- ⚙️ testes automatizados
-- 🔄 workflow de integração contínua
-
-<br>
-
-## 📌 Status do projeto
-
-O projeto possui:
-
-- [x] frontend funcional
-- [x] backend Python/FastAPI funcional
-- [x] integração com Supabase/PostgreSQL
-- [x] autenticação administrativa
-- [x] testes automatizados
-- [x] relatório em PDF
-- [x] documentação técnica
-- [x] CI configurado
-
-> 🚧 A publicação do repositório, branches, Pull Requests e execução do workflow na nuvem dependem da etapa de upload para o GitHub.
-
-<br>
-
-<div align="center">
-
-**Gestão e Qualidade de Software** · UNA Barreiro · 2026
-
-</div>
+- Taxa de cenários de QA aprovados.
+- Cobertura dos testes unitários.
+- Tempo de resposta da API.
+- Ausência de erros no console.
+- Build frontend aprovado na CI.
