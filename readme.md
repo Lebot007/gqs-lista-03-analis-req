@@ -6,6 +6,8 @@
 
 **Gestão e Qualidade de Software · A3 Prático**
 
+**Instituição:** Ânima Educação
+
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/API-Flask-000000?logo=flask&logoColor=white)
 ![ODS 4](https://img.shields.io/badge/ODS%204-Educação%20de%20Qualidade-0A97D9)
